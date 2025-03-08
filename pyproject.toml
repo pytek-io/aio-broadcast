@@ -1,0 +1,32 @@
+[project]
+name = "aio-broadcast"
+dynamic=["version"]
+description = "Multi consumers asyncio compatible queue"
+authors = [
+    { name = "fdv1", email = "francois@pytek.io" },
+]
+requires-python = ">=3.8"
+license = { file = "LICENSE" }
+readme = "README.md"
+packages = [{include = "src"}]
+keywords = ["asyncio", "queue", "multi-consumers"]
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-asyncio",
+    "pytest-cov",
+]
+
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
+
+[project.urls]
+Homepage = "https://github.com/pytek-io/aio-broadcast"
+Issues = "https://github.com/pypa/sampleproject/issues"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
