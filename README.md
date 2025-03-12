@@ -1,4 +1,5 @@
 [![Coverage](https://codecov.io/gh/pytek-io/aio-broadcast/branch/main/graph/badge.svg)](https://codecov.io/gh/pytek-io/aio-broadcast)
+[![CI](https://github.com/pytek-io/aio-broadcast/actions/workflows/ci.yml/badge.svg)](https://github.com/pytek-io/aio-broadcast/actions)
 
 This library provides ways to iterate through an async generator multiple times at once, as demonstrated below.
 
