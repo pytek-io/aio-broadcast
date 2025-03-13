@@ -19,14 +19,20 @@ class Link(Generic[T]):
 
 
 class MultiQueue(Generic[T]):
+    """A queue that can be read by multiple consumers concurrently."""
     def __init__(self):
         self.current_link = Link()
         self.updated = asyncio.Event()
 
     def __aiter__(self) -> AsyncIterator[T]:
+        """Return an async iterator to consume the queue."""
         return MultiQueueIterator(self)
 
     def put(self, item: T):
+        """Put an item in the queue.
+
+        item: the item to put in the queue
+        """
         self.current_link.value = item
         self.current_link.next = Link()
         self.current_link = self.current_link.next
@@ -34,6 +40,10 @@ class MultiQueue(Generic[T]):
         self.updated = asyncio.Event()
 
     def close(self):
+        """Close the queue.
+
+        Consumers will continue iterating through all remaining values.
+        """
         self.current_link.next = queue_closed
         self.updated.set()
 
@@ -54,7 +64,7 @@ class MultiQueueIterator(AsyncIterator[T]):
         return cast(T, item)
 
 
-class AsyncGeneratorBroadcast(Generic[T]):
+class AsyncGeneratorBroadcast(AsyncIterator[T]):
     def __init__(self, source: AsyncIterator[T]):
         self.source = source
         self.current_link: Link = Link()
@@ -70,6 +80,10 @@ class AsyncGeneratorBroadcast(Generic[T]):
 
     def __aiter__(self) -> AsyncIterator[T]:
         return AsyncGeneratorBroadcastIterator(self)
+
+    async def __anext__(self) -> T:
+        # This method is never called, but is required to implement the AsyncIterator protocol
+        raise NotImplementedError
 
     def close(self):
         self.current_link.next = queue_closed
@@ -101,5 +115,6 @@ class AsyncGeneratorBroadcastIterator(AsyncIterator[T]):
         return cast(T, value)
 
 
-def broadcast(source: AsyncIterator[T]) -> AsyncGeneratorBroadcast[T]:
+def broadcast(source: AsyncIterator[T]) -> AsyncIterator[T]:
+    """Wrap an async generator to allow multiple consumers."""
     return AsyncGeneratorBroadcast(source)

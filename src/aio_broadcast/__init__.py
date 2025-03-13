@@ -1,3 +1,3 @@
-from .broadcast import MultiQueue, AsyncGeneratorBroadcast, broadcast
+from .broadcast import MultiQueue, broadcast
 
-__all__ = ["MultiQueue", "AsyncGeneratorBroadcast", "broadcast"]
+__all__ = ["MultiQueue", "broadcast"]

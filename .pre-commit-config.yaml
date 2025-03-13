@@ -5,6 +5,8 @@ repos:
     -   id: check-yaml
     -   id: end-of-file-fixer
     -   id: trailing-whitespace
+-   repo: https://github.com/pycqa/flake8
+    rev: 7.0.0
     hooks:
     - id: flake8
 -   repo: https://github.com/pre-commit/mirrors-mypy
@@ -13,6 +15,7 @@ repos:
     rev: v1.6.1
     hooks:
     - id: mypy
+      exclude: "docs/"
       additional_dependencies: [pytest, typing-extensions]
       types: [python]
 -   repo: https://github.com/RobertCraigie/pyright-python

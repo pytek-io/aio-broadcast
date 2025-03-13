@@ -8,19 +8,14 @@ async def print_stream(stream, name, delay):
         print(name, i)
 
 
-async def feed_stream(nb_values, live_stream: MultiQueue[int]):
-    for i in range(nb_values):
-        await asyncio.sleep(0.2)
-        live_stream.put(i)
-    live_stream.close()
-
-
 async def main():
-    source_stream = MultiQueue()
-    await asyncio.gather(
-        feed_stream(5, source_stream),
-        print_stream(source_stream, "fast", 0.5),
-        print_stream(source_stream, "slow", 1),
-    )
+    stream = MultiQueue()
+    consumers = [asyncio.create_task(print_stream(stream, f"consumer {i}", 1 / (i + 1))) for i in range(5)]
+    for i in range(5):
+        await asyncio.sleep(0.2)
+        stream.put(i)
+    stream.close()
+    await asyncio.gather(*consumers)
+
 
 asyncio.run(main())
